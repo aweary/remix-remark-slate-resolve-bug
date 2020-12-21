@@ -1,23 +1,34 @@
 import { useRouteData } from "@remix-run/react";
 
+import { createEditor } from "slate";
+import { Slate, withReact } from "slate-react";
+import { EditablePlugins } from "@udecode/slate-plugins";
+import { useMemo, useState } from "react";
+
+import type { Node } from "slate";
+
 export function meta() {
-  return {
-    title: "Remix Starter",
-    description: "Welcome to remix!",
-  };
+ return {
+  title: "Remix Starter",
+  description: "Welcome to remix!",
+ };
 }
 
 export default function Index() {
-  let data = useRouteData();
+ let data = useRouteData();
+ const [value, setValue] = useState<Node[]>([]);
 
-  return (
-    <div style={{ textAlign: "center", padding: 20 }}>
-      <h2>Welcome to Remix!</h2>
-      <p>
-        <a href="https://remix.run/dashboard/docs">Check out the docs</a> to get
-        started.
-      </p>
-      <p>Message from the loader: {data.message}</p>
-    </div>
-  );
+ const editor = useMemo(() => withReact(createEditor()), []);
+
+ return (
+  <div>
+   <Slate
+    editor={editor}
+    value={value}
+    onChange={(newValue) => setValue(newValue)}
+   >
+    <EditablePlugins plugins={[]} placeholder="Enter some text..." />
+   </Slate>
+  </div>
+ );
 }
